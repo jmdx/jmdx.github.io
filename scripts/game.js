@@ -10,40 +10,6 @@
       this.context = context;
       this.xOffset = 10;
       this.yOffset = 10;
-      this.bg = new Image();
-      this.bg.src = "images/bg.png";
-      this.greenUp = new Image();
-      this.greenDown = new Image();
-      this.greenUp.src = "images/TileGreenUp.png";
-      this.greenDown.src = "images/TileGreenDown.png";
-      this.redUp = new Image();
-      this.redDown = new Image();
-      this.redUp.src = "images/TileRedUp.png";
-      this.redDown.src = "images/TileRedDown.png";
-      this.orangeUp = new Image();
-      this.orangeDown = new Image();
-      this.orangeUp.src = "images/TileOrangeUp.png";
-      this.orangeDown.src = "images/TileOrangeDown.png";
-      this.blueUp = new Image();
-      this.blueDown = new Image();
-      this.blueUp.src = "images/TileBlueUp.png";
-      this.blueDown.src = "images/TileBlueDown.png";
-      this.purpleUp = new Image();
-      this.purpleDown = new Image();
-      this.purpleUp.src = "images/TilePurpleUp.png";
-      this.purpleDown.src = "images/TilePurpleDown.png";
-      this.yellowUp = new Image();
-      this.yellowDown = new Image();
-      this.yellowUp.src = "images/TileYellowUp.png";
-      this.yellowDown.src = "images/TileYellowDown.png";
-      this.bgUp = new Image();
-      this.bgDown = new Image();
-      this.bgUp.src = "images/TileBgUp.png";
-      this.bgDown.src = "images/TileBgDown.png";
-      this.leftDir = new Image();
-      this.leftDir.src = "images/LeftDirIndicator.png";
-      this.rightDir = new Image();
-      this.rightDir.src = "images/RightDirIndicator.png";
       this.score = 0;
       this.level = 1;
       this.currentPiece = [2];
@@ -138,25 +104,25 @@
             try {
               switch (tile) {
                 case 0:
-                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? this.bgUp : this.bgDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
+                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? TritrisImage.bgUp : TritrisImage.bgDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
                   break;
                 case 1:
-                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? this.greenUp : this.greenDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
+                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? TritrisImage.greenUp : TritrisImage.greenDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
                   break;
                 case 2:
-                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? this.redUp : this.redDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
+                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? TritrisImage.redUp : TritrisImage.redDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
                   break;
                 case 3:
-                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? this.orangeUp : this.orangeDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
+                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? TritrisImage.orangeUp : TritrisImage.orangeDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
                   break;
                 case 4:
-                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? this.blueUp : this.blueDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
+                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? TritrisImage.blueUp : TritrisImage.blueDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
                   break;
                 case 5:
-                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? this.purpleUp : this.purpleDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
+                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? TritrisImage.purpleUp : TritrisImage.purpleDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
                   break;
                 case 6:
-                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? this.yellowUp : this.yellowDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
+                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? TritrisImage.yellowUp : TritrisImage.yellowDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
                   break;
                 default:
                   _results1.push(void 0);
@@ -227,7 +193,7 @@
           this.update();
         }
         try {
-          this.context.drawImage(this.bg, 0, 0);
+          this.context.drawImage(TritrisImage.bg, 0, 0);
         } catch (_error) {
           e = _error;
         }
@@ -249,9 +215,9 @@
       try {
         switch (this.currentDir) {
           case -1:
-            return this.context.drawImage(this.leftDir, 270, 250);
+            return this.context.drawImage(TritrisImage.leftDir, 270, 250);
           case 1:
-            return this.context.drawImage(this.rightDir, 270, 250);
+            return this.context.drawImage(TritrisImage.rightDir, 270, 250);
         }
       } catch (_error) {
         e = _error;
@@ -265,25 +231,25 @@
       j = 0;
       tX = 350;
       tY = 50;
-      toBeDrawn = this.bgUp;
+      toBeDrawn = TritrisImage.bgUp;
       switch (this.nextColor) {
         case 1:
-          toBeDrawn = (Math.pow(-1, i + j) === 1 ? this.greenUp : this.greenDown);
+          toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.greenUp : TritrisImage.greenDown);
           break;
         case 2:
-          toBeDrawn = (Math.pow(-1, i + j) === 1 ? this.redUp : this.redDown);
+          toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.redUp : TritrisImage.redDown);
           break;
         case 3:
-          toBeDrawn = (Math.pow(-1, i + j) === 1 ? this.orangeUp : this.orangeDown);
+          toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.orangeUp : TritrisImage.orangeDown);
           break;
         case 4:
-          toBeDrawn = (Math.pow(-1, i + j) === 1 ? this.blueUp : this.blueDown);
+          toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.blueUp : TritrisImage.blueDown);
           break;
         case 5:
-          toBeDrawn = (Math.pow(-1, i + j) === 1 ? this.purpleUp : this.purpleDown);
+          toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.purpleUp : TritrisImage.purpleDown);
           break;
         case 6:
-          toBeDrawn = (Math.pow(-1, i + j) === 1 ? this.yellowUp : this.yellowDown);
+          toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.yellowUp : TritrisImage.yellowDown);
       }
       try {
         context.drawImage(toBeDrawn, 0, 0, 32, 32, 9 * i + tX, 16 * j + tY, 16, 16);
@@ -316,25 +282,25 @@
               i++;
             }
         }
-        toBeDrawn = this.bgUp;
+        toBeDrawn = TritrisImage.bgUp;
         switch (this.nextColor) {
           case 1:
-            toBeDrawn = (Math.pow(-1, i + j) === 1 ? this.greenUp : this.greenDown);
+            toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.greenUp : TritrisImage.greenDown);
             break;
           case 2:
-            toBeDrawn = (Math.pow(-1, i + j) === 1 ? this.redUp : this.redDown);
+            toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.redUp : TritrisImage.redDown);
             break;
           case 3:
-            toBeDrawn = (Math.pow(-1, i + j) === 1 ? this.orangeUp : this.orangeDown);
+            toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.orangeUp : TritrisImage.orangeDown);
             break;
           case 4:
-            toBeDrawn = (Math.pow(-1, i + j) === 1 ? this.blueUp : this.blueDown);
+            toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.blueUp : TritrisImage.blueDown);
             break;
           case 5:
-            toBeDrawn = (Math.pow(-1, i + j) === 1 ? this.purpleUp : this.purpleDown);
+            toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.purpleUp : TritrisImage.purpleDown);
             break;
           case 6:
-            toBeDrawn = (Math.pow(-1, i + j) === 1 ? this.yellowUp : this.yellowDown);
+            toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.yellowUp : TritrisImage.yellowDown);
         }
         try {
           context.drawImage(toBeDrawn, 0, 0, 32, 32, 9 * i + tX, 16 * j + tY, 16, 16);

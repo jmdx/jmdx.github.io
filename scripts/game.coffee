@@ -4,50 +4,6 @@ class Board
 	constructor: (@context) ->
 		@xOffset = 10
 		@yOffset = 10
-	
-		@bg = new Image()
-		@bg.src = "images/bg.png"
-	
-		@greenUp = new Image()
-		@greenDown = new Image()
-		@greenUp.src = "images/TileGreenUp.png"
-		@greenDown.src = "images/TileGreenDown.png"
-		
-		@redUp = new Image()
-		@redDown = new Image()
-		@redUp.src = "images/TileRedUp.png"
-		@redDown.src = "images/TileRedDown.png"
-		
-		@orangeUp = new Image()
-		@orangeDown = new Image()
-		@orangeUp.src = "images/TileOrangeUp.png"
-		@orangeDown.src = "images/TileOrangeDown.png"
-		
-		@blueUp = new Image()
-		@blueDown = new Image()
-		@blueUp.src = "images/TileBlueUp.png"
-		@blueDown.src = "images/TileBlueDown.png"
-		
-		@purpleUp = new Image()
-		@purpleDown = new Image()
-		@purpleUp.src = "images/TilePurpleUp.png"
-		@purpleDown.src = "images/TilePurpleDown.png"
-		
-		@yellowUp = new Image()
-		@yellowDown = new Image()
-		@yellowUp.src = "images/TileYellowUp.png"
-		@yellowDown.src = "images/TileYellowDown.png"
-		
-		@bgUp = new Image()
-		@bgDown = new Image()
-		@bgUp.src = "images/TileBgUp.png"
-		@bgDown.src = "images/TileBgDown.png"
-		
-		@leftDir = new Image()
-		@leftDir.src = "images/LeftDirIndicator.png"
-		@rightDir = new Image()
-		@rightDir.src = "images/RightDirIndicator.png"
-		
 		@score = 0
 		@level = 1
 		@currentPiece = [2]
@@ -107,13 +63,13 @@ class Board
 			for tile, j in arr[i]
 				try
 					switch tile
-						when 0 then @context.drawImage (if Math.pow(-1,i+j)==1 then @bgUp else @bgDown), 18*i + @xOffset, 32*j + @yOffset
-						when 1 then @context.drawImage (if Math.pow(-1,i+j)==1 then @greenUp else @greenDown), 18*i + @xOffset, 32*j + @yOffset
-						when 2 then @context.drawImage (if Math.pow(-1,i+j)==1 then @redUp else @redDown), 18*i + @xOffset, 32*j + @yOffset
-						when 3 then @context.drawImage (if Math.pow(-1,i+j)==1 then @orangeUp else @orangeDown), 18*i + @xOffset, 32*j + @yOffset
-						when 4 then @context.drawImage (if Math.pow(-1,i+j)==1 then @blueUp else @blueDown), 18*i + @xOffset, 32*j + @yOffset
-						when 5 then @context.drawImage (if Math.pow(-1,i+j)==1 then @purpleUp else @purpleDown), 18*i + @xOffset, 32*j + @yOffset
-						when 6 then @context.drawImage (if Math.pow(-1,i+j)==1 then @yellowUp else @yellowDown), 18*i + @xOffset, 32*j + @yOffset
+						when 0 then @context.drawImage (if Math.pow(-1,i+j)==1 then TritrisImage.bgUp else TritrisImage.bgDown), 18*i + @xOffset, 32*j + @yOffset
+						when 1 then @context.drawImage (if Math.pow(-1,i+j)==1 then TritrisImage.greenUp else TritrisImage.greenDown), 18*i + @xOffset, 32*j + @yOffset
+						when 2 then @context.drawImage (if Math.pow(-1,i+j)==1 then TritrisImage.redUp else TritrisImage.redDown), 18*i + @xOffset, 32*j + @yOffset
+						when 3 then @context.drawImage (if Math.pow(-1,i+j)==1 then TritrisImage.orangeUp else TritrisImage.orangeDown), 18*i + @xOffset, 32*j + @yOffset
+						when 4 then @context.drawImage (if Math.pow(-1,i+j)==1 then TritrisImage.blueUp else TritrisImage.blueDown), 18*i + @xOffset, 32*j + @yOffset
+						when 5 then @context.drawImage (if Math.pow(-1,i+j)==1 then TritrisImage.purpleUp else TritrisImage.purpleDown), 18*i + @xOffset, 32*j + @yOffset
+						when 6 then @context.drawImage (if Math.pow(-1,i+j)==1 then TritrisImage.yellowUp else TritrisImage.yellowDown), 18*i + @xOffset, 32*j + @yOffset
 				catch e
 				
 	insertCurrentPiece: (arr, directions, tileCode) ->
@@ -138,7 +94,7 @@ class Board
 			if @count == 0
 				@update()
 			try
-				@context.drawImage @bg, 0, 0
+				@context.drawImage TritrisImage.bg, 0, 0
 			catch e
 			@drawArr @currentArr
 			@drawArr @insertCurrentPiece @currentArr, @currentPiece, @currentColor
@@ -153,8 +109,8 @@ class Board
 	drawDir: () ->
 		try
 			switch @currentDir
-				when -1 then @context.drawImage @leftDir, 270, 250
-				when 1 then @context.drawImage @rightDir, 270, 250
+				when -1 then @context.drawImage TritrisImage.leftDir, 270, 250
+				when 1 then @context.drawImage TritrisImage.rightDir, 270, 250
 		catch e
 	
 	drawNext: () ->
@@ -163,14 +119,14 @@ class Board
 		j = 0
 		tX = 350
 		tY = 50
-		toBeDrawn = @bgUp
+		toBeDrawn = TritrisImage.bgUp
 		switch @nextColor
-			when 1 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @greenUp else @greenDown)
-			when 2 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @redUp else @redDown)
-			when 3 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @orangeUp else @orangeDown)
-			when 4 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @blueUp else @blueDown)
-			when 5 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @purpleUp else @purpleDown)
-			when 6 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @yellowUp else @yellowDown)
+			when 1 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.greenUp else TritrisImage.greenDown)
+			when 2 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.redUp else TritrisImage.redDown)
+			when 3 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.orangeUp else TritrisImage.orangeDown)
+			when 4 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.blueUp else TritrisImage.blueDown)
+			when 5 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.purpleUp else TritrisImage.purpleDown)
+			when 6 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.yellowUp else TritrisImage.yellowDown)
 		try
 			context.drawImage toBeDrawn, 0, 0, 32, 32, 9*i + tX, 16*j + tY, 16, 16
 		catch e
@@ -179,14 +135,14 @@ class Board
 				when 1 then (if isUpTile then i-- else i--)
 				when 2 then (if isUpTile then i++ else j--)
 				when 3 then (if isUpTile then j++ else i++)
-			toBeDrawn = @bgUp
+			toBeDrawn = TritrisImage.bgUp
 			switch @nextColor
-				when 1 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @greenUp else @greenDown)
-				when 2 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @redUp else @redDown)
-				when 3 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @orangeUp else @orangeDown)
-				when 4 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @blueUp else @blueDown)
-				when 5 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @purpleUp else @purpleDown)
-				when 6 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @yellowUp else @yellowDown)
+				when 1 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.greenUp else TritrisImage.greenDown)
+				when 2 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.redUp else TritrisImage.redDown)
+				when 3 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.orangeUp else TritrisImage.orangeDown)
+				when 4 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.blueUp else TritrisImage.blueDown)
+				when 5 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.purpleUp else TritrisImage.purpleDown)
+				when 6 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.yellowUp else TritrisImage.yellowDown)
 			try
 				context.drawImage toBeDrawn, 0, 0, 32, 32, 9*i + tX, 16*j + tY, 16, 16
 			catch e
