@@ -58,19 +58,26 @@ class Board
 				@startFromUpTile = true
 				@checkLines()
 				
+	getColorFromInt: (index) ->
+		switch index
+			when 1 then TritrisImage.green
+			when 2 then TritrisImage.red
+			when 3 then TritrisImage.orange
+			when 4 then TritrisImage.blue
+			when 5 then TritrisImage.purple
+			when 6 then TritrisImage.yellow
+			else TritrisImage.bgTile
+		
+	getDirectedTile: (tile, i, j) ->
+		signOfDirection = Math.pow(-1,i+j) == 1
+		imageToDraw = if signOfDirection then tile.up else tile.down
+	
 	drawArr: (arr) ->
 		for line, i in arr
 			for tile, j in arr[i]
-				try
-					switch tile
-						when 0 then @context.drawImage (if Math.pow(-1,i+j)==1 then TritrisImage.bgUp else TritrisImage.bgDown), 18*i + @xOffset, 32*j + @yOffset
-						when 1 then @context.drawImage (if Math.pow(-1,i+j)==1 then TritrisImage.greenUp else TritrisImage.greenDown), 18*i + @xOffset, 32*j + @yOffset
-						when 2 then @context.drawImage (if Math.pow(-1,i+j)==1 then TritrisImage.redUp else TritrisImage.redDown), 18*i + @xOffset, 32*j + @yOffset
-						when 3 then @context.drawImage (if Math.pow(-1,i+j)==1 then TritrisImage.orangeUp else TritrisImage.orangeDown), 18*i + @xOffset, 32*j + @yOffset
-						when 4 then @context.drawImage (if Math.pow(-1,i+j)==1 then TritrisImage.blueUp else TritrisImage.blueDown), 18*i + @xOffset, 32*j + @yOffset
-						when 5 then @context.drawImage (if Math.pow(-1,i+j)==1 then TritrisImage.purpleUp else TritrisImage.purpleDown), 18*i + @xOffset, 32*j + @yOffset
-						when 6 then @context.drawImage (if Math.pow(-1,i+j)==1 then TritrisImage.yellowUp else TritrisImage.yellowDown), 18*i + @xOffset, 32*j + @yOffset
-				catch e
+				currentTileType = @getColorFromInt tile
+				imageToDraw = @getDirectedTile currentTileType, i, j
+				@context.drawImage imageToDraw, 18*i + @xOffset, 32*j + @yOffset
 				
 	insertCurrentPiece: (arr, directions, tileCode) ->
 		x = @pieceX
@@ -119,33 +126,19 @@ class Board
 		j = 0
 		tX = 350
 		tY = 50
-		toBeDrawn = TritrisImage.bgUp
-		switch @nextColor
-			when 1 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.greenUp else TritrisImage.greenDown)
-			when 2 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.redUp else TritrisImage.redDown)
-			when 3 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.orangeUp else TritrisImage.orangeDown)
-			when 4 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.blueUp else TritrisImage.blueDown)
-			when 5 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.purpleUp else TritrisImage.purpleDown)
-			when 6 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.yellowUp else TritrisImage.yellowDown)
-		try
-			context.drawImage toBeDrawn, 0, 0, 32, 32, 9*i + tX, 16*j + tY, 16, 16
-		catch e
+		tileType = @getColorFromInt @nextColor
+		toBeDrawn = @getDirectedTile tileType, i, j
+		@context.drawImage toBeDrawn, 0, 0, 32, 32, 9*i + tX, 16*j + tY, 16, 16
 		for dir in @nextPiece
 			switch dir
 				when 1 then (if isUpTile then i-- else i--)
 				when 2 then (if isUpTile then i++ else j--)
 				when 3 then (if isUpTile then j++ else i++)
 			toBeDrawn = TritrisImage.bgUp
-			switch @nextColor
-				when 1 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.greenUp else TritrisImage.greenDown)
-				when 2 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.redUp else TritrisImage.redDown)
-				when 3 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.orangeUp else TritrisImage.orangeDown)
-				when 4 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.blueUp else TritrisImage.blueDown)
-				when 5 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.purpleUp else TritrisImage.purpleDown)
-				when 6 then toBeDrawn = (if Math.pow(-1,i+j)==1 then TritrisImage.yellowUp else TritrisImage.yellowDown)
-			try
-				context.drawImage toBeDrawn, 0, 0, 32, 32, 9*i + tX, 16*j + tY, 16, 16
-			catch e
+			tileType = @getColorFromInt @nextColor
+			toBeDrawn = @getDirectedTile tileType, i, j
+			@context.drawImage toBeDrawn, 0, 0, 32, 32, 9*i + tX, 16*j + tY, 16, 16
+			
 			isUpTile = not isUpTile
 			
 	checkLines: () ->

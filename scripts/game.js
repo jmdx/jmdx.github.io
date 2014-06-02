@@ -90,8 +90,33 @@
       }
     };
 
+    Board.prototype.getColorFromInt = function(index) {
+      switch (index) {
+        case 1:
+          return TritrisImage.green;
+        case 2:
+          return TritrisImage.red;
+        case 3:
+          return TritrisImage.orange;
+        case 4:
+          return TritrisImage.blue;
+        case 5:
+          return TritrisImage.purple;
+        case 6:
+          return TritrisImage.yellow;
+        default:
+          return TritrisImage.bgTile;
+      }
+    };
+
+    Board.prototype.getDirectedTile = function(tile, i, j) {
+      var imageToDraw, signOfDirection;
+      signOfDirection = Math.pow(-1, i + j) === 1;
+      return imageToDraw = signOfDirection ? tile.up : tile.down;
+    };
+
     Board.prototype.drawArr = function(arr) {
-      var e, i, j, line, tile, _i, _len, _results;
+      var currentTileType, i, imageToDraw, j, line, tile, _i, _len, _results;
       _results = [];
       for (i = _i = 0, _len = arr.length; _i < _len; i = ++_i) {
         line = arr[i];
@@ -101,35 +126,9 @@
           _results1 = [];
           for (j = _j = 0, _len1 = _ref.length; _j < _len1; j = ++_j) {
             tile = _ref[j];
-            try {
-              switch (tile) {
-                case 0:
-                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? TritrisImage.bgUp : TritrisImage.bgDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
-                  break;
-                case 1:
-                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? TritrisImage.greenUp : TritrisImage.greenDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
-                  break;
-                case 2:
-                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? TritrisImage.redUp : TritrisImage.redDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
-                  break;
-                case 3:
-                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? TritrisImage.orangeUp : TritrisImage.orangeDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
-                  break;
-                case 4:
-                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? TritrisImage.blueUp : TritrisImage.blueDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
-                  break;
-                case 5:
-                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? TritrisImage.purpleUp : TritrisImage.purpleDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
-                  break;
-                case 6:
-                  _results1.push(this.context.drawImage((Math.pow(-1, i + j) === 1 ? TritrisImage.yellowUp : TritrisImage.yellowDown), 18 * i + this.xOffset, 32 * j + this.yOffset));
-                  break;
-                default:
-                  _results1.push(void 0);
-              }
-            } catch (_error) {
-              e = _error;
-            }
+            currentTileType = this.getColorFromInt(tile);
+            imageToDraw = this.getDirectedTile(currentTileType, i, j);
+            _results1.push(this.context.drawImage(imageToDraw, 18 * i + this.xOffset, 32 * j + this.yOffset));
           }
           return _results1;
         }).call(this));
@@ -225,37 +224,15 @@
     };
 
     Board.prototype.drawNext = function() {
-      var dir, e, i, isUpTile, j, tX, tY, toBeDrawn, _i, _len, _ref, _results;
+      var dir, i, isUpTile, j, tX, tY, tileType, toBeDrawn, _i, _len, _ref, _results;
       isUpTile = true;
       i = 0;
       j = 0;
       tX = 350;
       tY = 50;
-      toBeDrawn = TritrisImage.bgUp;
-      switch (this.nextColor) {
-        case 1:
-          toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.greenUp : TritrisImage.greenDown);
-          break;
-        case 2:
-          toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.redUp : TritrisImage.redDown);
-          break;
-        case 3:
-          toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.orangeUp : TritrisImage.orangeDown);
-          break;
-        case 4:
-          toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.blueUp : TritrisImage.blueDown);
-          break;
-        case 5:
-          toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.purpleUp : TritrisImage.purpleDown);
-          break;
-        case 6:
-          toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.yellowUp : TritrisImage.yellowDown);
-      }
-      try {
-        context.drawImage(toBeDrawn, 0, 0, 32, 32, 9 * i + tX, 16 * j + tY, 16, 16);
-      } catch (_error) {
-        e = _error;
-      }
+      tileType = this.getColorFromInt(this.nextColor);
+      toBeDrawn = this.getDirectedTile(tileType, i, j);
+      this.context.drawImage(toBeDrawn, 0, 0, 32, 32, 9 * i + tX, 16 * j + tY, 16, 16);
       _ref = this.nextPiece;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -283,30 +260,9 @@
             }
         }
         toBeDrawn = TritrisImage.bgUp;
-        switch (this.nextColor) {
-          case 1:
-            toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.greenUp : TritrisImage.greenDown);
-            break;
-          case 2:
-            toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.redUp : TritrisImage.redDown);
-            break;
-          case 3:
-            toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.orangeUp : TritrisImage.orangeDown);
-            break;
-          case 4:
-            toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.blueUp : TritrisImage.blueDown);
-            break;
-          case 5:
-            toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.purpleUp : TritrisImage.purpleDown);
-            break;
-          case 6:
-            toBeDrawn = (Math.pow(-1, i + j) === 1 ? TritrisImage.yellowUp : TritrisImage.yellowDown);
-        }
-        try {
-          context.drawImage(toBeDrawn, 0, 0, 32, 32, 9 * i + tX, 16 * j + tY, 16, 16);
-        } catch (_error) {
-          e = _error;
-        }
+        tileType = this.getColorFromInt(this.nextColor);
+        toBeDrawn = this.getDirectedTile(tileType, i, j);
+        this.context.drawImage(toBeDrawn, 0, 0, 32, 32, 9 * i + tX, 16 * j + tY, 16, 16);
         _results.push(isUpTile = !isUpTile);
       }
       return _results;

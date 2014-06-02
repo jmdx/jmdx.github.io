@@ -5,25 +5,21 @@ loadImage = (name) ->
 	loadedImage.src = imagePath + name + ".png"
 	loadedImage
 
+loadTile = (colorName) ->
+	up: loadImage("Tile" + colorName + "Up")
+	down: loadImage("Tile" + colorName + "Down")
+
 window.TritrisImage =
 	bg : loadImage("bg")
 
-	greenUp: loadImage("TileGreenUp")
-	greenDown: loadImage("TileGreenDown")
-	redUp: loadImage("TileRedUp")
-	redDown: loadImage("TileRedDown")
-	blueUp: loadImage("TileBlueUp")
-	blueDown: loadImage("TileBlueDown")
-	orangeUp: loadImage("TileOrangeUp")
-	orangeDown: loadImage("TileOrangeDown")
-	purpleUp: loadImage("TilePurpleUp")
-	purpleDown: loadImage("TilePurpleDown")
-	yellowUp: loadImage("TileYellowUp")
-	yellowDown: loadImage("TileYellowDown")
+	green: loadTile("Green")
+	red: loadTile("Blue")
+	blue: loadTile("Blue")
+	orange: loadTile("Orange")
+	purple: loadTile("Purple")
+	yellow: loadTile("Yellow")
+	green: loadTile("Green")
+	bgTile: loadTile("Bg")
 
-	
-	bgUp : loadImage("TileBgUp")
-	bgDown : loadImage("TileBgDown")
-	
 	leftDir : loadImage("LeftDirIndicator")
 	rightDir : loadImage("RightDirIndicator")
