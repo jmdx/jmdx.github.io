@@ -1,0 +1,362 @@
+state = true
+
+class Board
+	constructor: (@context) ->
+		@xOffset = 10
+		@yOffset = 10
+	
+		@bg = new Image()
+		@bg.src = "images/bg.png"
+	
+		@greenUp = new Image()
+		@greenDown = new Image()
+		@greenUp.src = "images/TileGreenUp.png"
+		@greenDown.src = "images/TileGreenDown.png"
+		
+		@redUp = new Image()
+		@redDown = new Image()
+		@redUp.src = "images/TileRedUp.png"
+		@redDown.src = "images/TileRedDown.png"
+		
+		@orangeUp = new Image()
+		@orangeDown = new Image()
+		@orangeUp.src = "images/TileOrangeUp.png"
+		@orangeDown.src = "images/TileOrangeDown.png"
+		
+		@blueUp = new Image()
+		@blueDown = new Image()
+		@blueUp.src = "images/TileBlueUp.png"
+		@blueDown.src = "images/TileBlueDown.png"
+		
+		@purpleUp = new Image()
+		@purpleDown = new Image()
+		@purpleUp.src = "images/TilePurpleUp.png"
+		@purpleDown.src = "images/TilePurpleDown.png"
+		
+		@yellowUp = new Image()
+		@yellowDown = new Image()
+		@yellowUp.src = "images/TileYellowUp.png"
+		@yellowDown.src = "images/TileYellowDown.png"
+		
+		@bgUp = new Image()
+		@bgDown = new Image()
+		@bgUp.src = "images/TileBgUp.png"
+		@bgDown.src = "images/TileBgDown.png"
+		
+		@leftDir = new Image()
+		@leftDir.src = "images/LeftDirIndicator.png"
+		@rightDir = new Image()
+		@rightDir.src = "images/RightDirIndicator.png"
+		
+		@score = 0
+		@level = 1
+		@currentPiece = [2]
+		@currentColor = 2
+		@nextPiece = [2]
+		@nextColor = 2
+		@pieces = [
+			{dirs : [2], color : 6}
+			{dirs : [2,1,1], color : 1}
+			{dirs : [2,1,3,2,1], color : 1} #Big Triangle
+			{dirs : [2,1,1,1], color : 2} #>>>>
+			{dirs : [1,3,2,3], color : 3} #<<<<
+			{dirs : [2,1,1,2], color : 4} #Right C
+			{dirs : [1,3,2,2], color : 5} #Left C
+			{dirs : [1,3,3,2,2,3], color : 4} #Right claw
+			{dirs : [2,1,3,2,1,1], color : 5} #Left claw
+		]
+		@levels = [2,3,5,5,7,9,9,9,9,9,9]
+		@pieceX = 6
+		@pieceY = 0
+		@currentDir = 1
+		@currentInc = 1
+		@currentArr = []
+		for i in [0...13]
+			current = []
+			for j in [0...16]
+				current.push 0
+			@currentArr.push current
+		@expX = 0
+		@count = 0
+		@upInterval = 25
+		@startFromUpTile = true
+		@flipCount = 2
+		@isGameOver = false
+		
+	update: () ->
+		if @checkSpace @currentPiece, @pieceX + @currentDir, @pieceY + 1, @startFromUpTile
+			@pieceX += @currentDir
+			@pieceY += 1
+		else
+			if @pieceY == 0 and @pieceX == 6
+				@gameOver()
+			else
+				@currentArr = @insertCurrentPiece @currentArr, @currentPiece, @currentColor
+				@pieceX = 6
+				@pieceY = 0
+				newIndex = Math.floor(Math.random()*@levels[@level])
+				@currentPiece = @nextPiece
+				@currentColor = @nextColor
+				@nextPiece = @pieces[newIndex].dirs
+				@nextColor = @pieces[newIndex].color
+				@startFromUpTile = true
+				@checkLines()
+				
+	drawArr: (arr) ->
+		for line, i in arr
+			for tile, j in arr[i]
+				try
+					switch tile
+						when 0 then @context.drawImage (if Math.pow(-1,i+j)==1 then @bgUp else @bgDown), 18*i + @xOffset, 32*j + @yOffset
+						when 1 then @context.drawImage (if Math.pow(-1,i+j)==1 then @greenUp else @greenDown), 18*i + @xOffset, 32*j + @yOffset
+						when 2 then @context.drawImage (if Math.pow(-1,i+j)==1 then @redUp else @redDown), 18*i + @xOffset, 32*j + @yOffset
+						when 3 then @context.drawImage (if Math.pow(-1,i+j)==1 then @orangeUp else @orangeDown), 18*i + @xOffset, 32*j + @yOffset
+						when 4 then @context.drawImage (if Math.pow(-1,i+j)==1 then @blueUp else @blueDown), 18*i + @xOffset, 32*j + @yOffset
+						when 5 then @context.drawImage (if Math.pow(-1,i+j)==1 then @purpleUp else @purpleDown), 18*i + @xOffset, 32*j + @yOffset
+						when 6 then @context.drawImage (if Math.pow(-1,i+j)==1 then @yellowUp else @yellowDown), 18*i + @xOffset, 32*j + @yOffset
+				catch e
+				
+	insertCurrentPiece: (arr, directions, tileCode) ->
+		x = @pieceX
+		y = @pieceY
+		isUpTile = @startFromUpTile
+		newArr = []
+		for i in arr    #deepcopy arr to newArr
+			newArr.push (j for j in i)
+		newArr[x][y] = tileCode
+		for dir in directions
+			switch dir
+				when 1 then (if isUpTile then x-- else x--)
+				when 2 then (if isUpTile then x++ else y--)
+				when 3 then (if isUpTile then y++ else x++)
+			newArr[x][y] = tileCode
+			isUpTile = not isUpTile
+		newArr
+		
+	draw: () ->
+		if not @isGameOver
+			if @count == 0
+				@update()
+			try
+				@context.drawImage @bg, 0, 0
+			catch e
+			@drawArr @currentArr
+			@drawArr @insertCurrentPiece @currentArr, @currentPiece, @currentColor
+			@drawNext()
+			@drawDir()
+			@count = if @count > @upInterval then 0 else @count + 1
+			context.fillStyle = "#777777"
+			context.font = "40pt Retro Rescued"
+			context.fillText "Score: " + @score, 50, 600
+		else
+			@gameOver()
+	drawDir: () ->
+		try
+			switch @currentDir
+				when -1 then @context.drawImage @leftDir, 270, 250
+				when 1 then @context.drawImage @rightDir, 270, 250
+		catch e
+	
+	drawNext: () ->
+		isUpTile = true
+		i = 0
+		j = 0
+		tX = 350
+		tY = 50
+		toBeDrawn = @bgUp
+		switch @nextColor
+			when 1 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @greenUp else @greenDown)
+			when 2 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @redUp else @redDown)
+			when 3 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @orangeUp else @orangeDown)
+			when 4 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @blueUp else @blueDown)
+			when 5 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @purpleUp else @purpleDown)
+			when 6 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @yellowUp else @yellowDown)
+		try
+			context.drawImage toBeDrawn, 0, 0, 32, 32, 9*i + tX, 16*j + tY, 16, 16
+		catch e
+		for dir in @nextPiece
+			switch dir
+				when 1 then (if isUpTile then i-- else i--)
+				when 2 then (if isUpTile then i++ else j--)
+				when 3 then (if isUpTile then j++ else i++)
+			toBeDrawn = @bgUp
+			switch @nextColor
+				when 1 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @greenUp else @greenDown)
+				when 2 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @redUp else @redDown)
+				when 3 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @orangeUp else @orangeDown)
+				when 4 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @blueUp else @blueDown)
+				when 5 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @purpleUp else @purpleDown)
+				when 6 then toBeDrawn = (if Math.pow(-1,i+j)==1 then @yellowUp else @yellowDown)
+			try
+				context.drawImage toBeDrawn, 0, 0, 32, 32, 9*i + tX, 16*j + tY, 16, 16
+			catch e
+			isUpTile = not isUpTile
+			
+	checkLines: () ->
+		for line, i in @currentArr[0]
+			filled = true
+			for tile, j in @currentArr
+				if Math.pow(-1,i+j)==-1 and not @currentArr[j][i]
+					filled = false
+			if filled
+				@clearLine i
+				console.log i
+				
+	nextLevel: () ->
+		if @level < 10 then @level += 1
+		@upInterval = 25 - 2 * @level
+		
+	clearLine: (toBeCleared) ->
+		for column in @currentArr
+			column[1..toBeCleared] = column[0...toBeCleared]
+			column[0] = 0
+		@score += 100
+		if @score % 300 == 0 then @nextLevel()
+
+	checkSpace: (pieceString, plannedX, plannedY, isFirstUpTile) -> 
+		isNextOpen = true
+		x = plannedX
+		y = plannedY
+		isUpTile = isFirstUpTile
+		if x < @currentArr.length and y < @currentArr[0].length and x >= 0 and y >= 0
+			if @currentArr[x][y] != 0
+				isNextOpen = false
+		else
+			isNextOpen = false
+		for dir in pieceString
+			switch dir
+				when 1 then (if isUpTile then x-- else x--)
+				when 2 then (if isUpTile then x++ else y--)
+				when 3 then (if isUpTile then y++ else x++)
+			if x < @currentArr.length and y < @currentArr[0].length and x >= 0 and y >= 0
+				if @currentArr[x][y] != 0
+					isNextOpen = false
+			else
+				isNextOpen = false
+			isUpTile = not isUpTile
+		isNextOpen
+	gameOver: () ->
+		Clear()
+		context.fillStyle = "#777777"
+		context.font = "30pt Retro Rescued"
+		context.fillText "Final Score: " + @score, 50, 50
+		@isGameOver = true
+				
+	rotate: () ->
+		newDir = []
+		for dir in @currentPiece
+			newDir.push dir % 3 + 1
+		if @checkSpace newDir, @pieceX, @pieceY, @startFromUpTile
+			@currentPiece = newDir
+	
+	rotateSixtyDegrees: () ->
+		switch @flipCount
+			when 0
+				@flipCount = 1
+				@flip()
+			when 1
+				@flipCount = 2
+				@rotate()
+				@flip()
+			when 2
+				@flipCount = 0
+				@rotate()
+				@rotate()
+				@flip()
+			
+	flip: () ->
+		newDir = []
+		for i in @currentPiece
+			if i!=1
+				newDir.push (if i==2 then 3 else 2)
+			else
+				newDir.push 1
+		if @checkSpace newDir, @pieceX, @pieceY+@currentInc, not @startFromUpTile
+			@currentPiece = newDir
+			@startFromUpTile = not @startFromUpTile
+			@pieceY+=@currentInc
+			@currentInc *= -1
+	acceptKey: (code) ->
+		switch code
+			when 90 then @currentDir *= -1
+			when 37 then if (@checkSpace @currentPiece, @pieceX-2, @pieceY, @startFromUpTile) then @pieceX-=2
+			when 39 then if (@checkSpace @currentPiece, @pieceX+2, @pieceY, @startFromUpTile) then @pieceX+=2
+			when 38 then @rotate()
+			when 88 then @flip()
+			when 40
+				@count = 0
+	releaseKey: (code) ->
+	
+	
+
+class Menu
+	constructor: (@context) ->
+		@menuBg = new Image()
+		@menuBg.src = "images/menu.png"
+	draw: () ->
+		@context.drawImage @menuBg, 0, 0
+		
+# Clear the Canvas
+Clear = () ->
+	context.fillStyle = '#000000'
+	context.beginPath()
+	context.rect 0, 0, width, height
+	context.closePath()
+	context.fill()
+	
+gameState = "AtMenu"
+
+mouseListener = (e) ->
+	if e.pageY < 477 and e.pageY > 390 and gameState == "AtMenu" then gameState = "StartGame"
+	if gameState == "GameOver" then gameState = "AtMenu"
+keyDown = (e) ->
+	if gameState == "InGame"
+		board.acceptKey(e.keyCode)
+keyUp = (e) ->
+	if gameState == "InGame"
+		board.releaseKey(e.keyCode)
+addKeyObservers = () ->	
+	document.addEventListener 'click', mouseListener, false
+	document.addEventListener 'keydown', keyDown, false
+	document.addEventListener 'keyup' , keyUp, false
+
+## Game Code
+# Game Canvas Setup
+width = 416
+height = 658
+canvas = document.getElementById 'gameCanvas'
+context = canvas.getContext '2d'
+
+canvas.width = width
+canvas.height = height
+# Game Setup
+gLoop = 0
+points = 0
+menu = new Menu(context)
+board = new Board(context)
+addKeyObservers()
+waltzLoop = new buzz.sound([
+    "sounds/WaltzLoop.ogg",
+    "sounds/WaltzLoop.mp3",
+    "sounds/WaltzLoop.aac",
+    "sounds/WaltzLoop.wav"
+]);
+waltzLoop.play()
+waltzLoop.loop()
+
+GameLoop = () ->
+	Clear()
+	switch gameState
+		when "StartGame"
+			board = new Board(context)
+			gameState = "InGame"
+		when "AtMenu" then menu.draw()
+		when "InGame"
+			board.draw()
+			waltzLoop.setSpeed(0.9 + 0.1 * board.level)
+			if board.isGameOver then gameState = "GameOver"
+		when "GameOver" then board.gameOver()
+	if state is true
+		gLoop = setTimeout GameLoop, 1000 / 50
+		
+GameLoop()
