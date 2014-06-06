@@ -256,7 +256,7 @@ Clear = () ->
 gameState = "AtMenu"
 
 mouseListener = (e) ->
-  if e.pageY < 477 * scaling and e.pageY > 390 * scaling and gameState == "AtMenu" then gameState = "StartGame"
+  if gameState == "AtMenu" then gameState = "StartGame"
   if gameState == "GameOver" then gameState = "AtMenu"
 keyDown = (e) ->
   if gameState == "InGame"
