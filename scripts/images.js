@@ -21,7 +21,7 @@
   window.TritrisImage = {
     bg: loadImage("bg"),
     green: loadTile("Green"),
-    red: loadTile("Blue"),
+    red: loadTile("Red"),
     blue: loadTile("Blue"),
     orange: loadTile("Orange"),
     purple: loadTile("Purple"),
@@ -33,3 +33,5 @@
   };
 
 }).call(this);
+
+//# sourceMappingURL=images.map
