@@ -287,22 +287,19 @@ hammerOptions = {
   preventDefault: true
 }
 hammer = new Hammer(canvas)
-hammer.on 'swipeleft', (e) ->
+hammer.on 'dragleft', (e) ->
   board.acceptKey KeyBindings.left
-hammer.on 'swiperight', (e) ->
+hammer.on 'dragright', (e) ->
   board.acceptKey KeyBindings.right
-hammer.on 'swipedown', (e) ->
+hammer.on 'dragdown', (e) ->
   board.acceptKey KeyBindings.down
 hammer.on 'rotate', (e) ->
   board.acceptKey KeyBindings.rotate
-hammer.on 'swipeup', (e) ->
+hammer.on 'dragup', (e) ->
   board.acceptKey KeyBindings.flip
 hammer.on 'doubletap', (e) ->
   board.acceptKey KeyBindings.changeGravity
 
-hammer.on 'drag', (e) ->
-  if e.gesture? and e.gesture.deltaX >= 5
-    hammer.trigger "swipe", e
 
 
 # Game Setup

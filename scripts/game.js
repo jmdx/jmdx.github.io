@@ -525,15 +525,15 @@
 
   hammer = new Hammer(canvas);
 
-  hammer.on('swipeleft', function(e) {
+  hammer.on('dragleft', function(e) {
     return board.acceptKey(KeyBindings.left);
   });
 
-  hammer.on('swiperight', function(e) {
+  hammer.on('dragright', function(e) {
     return board.acceptKey(KeyBindings.right);
   });
 
-  hammer.on('swipedown', function(e) {
+  hammer.on('dragdown', function(e) {
     return board.acceptKey(KeyBindings.down);
   });
 
@@ -541,18 +541,12 @@
     return board.acceptKey(KeyBindings.rotate);
   });
 
-  hammer.on('swipeup', function(e) {
+  hammer.on('dragup', function(e) {
     return board.acceptKey(KeyBindings.flip);
   });
 
   hammer.on('doubletap', function(e) {
     return board.acceptKey(KeyBindings.changeGravity);
-  });
-
-  hammer.on('drag', function(e) {
-    if ((e.gesture != null) && e.gesture.deltaX >= 5) {
-      return hammer.trigger("swipe", e);
-    }
   });
 
   gLoop = 0;
