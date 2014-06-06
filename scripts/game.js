@@ -5,10 +5,9 @@
   state = true;
 
   Board = (function() {
-    function Board(context, scaleFactor) {
+    function Board(context) {
       var current, i, j, _i, _j;
       this.context = context;
-      this.context.scale(scaleFactor, scaleFactor);
       this.xOffset = 10;
       this.yOffset = 10;
       this.score = 0;
@@ -550,9 +549,11 @@
 
   points = 0;
 
+  context.scale(scaling, scaling);
+
   menu = new Menu(context);
 
-  board = new Board(context, scaling);
+  board = new Board(context);
 
   addKeyObservers();
 
@@ -566,7 +567,7 @@
     Clear();
     switch (gameState) {
       case "StartGame":
-        board = new Board(context, scaling);
+        board = new Board(context);
         gameState = "InGame";
         break;
       case "AtMenu":

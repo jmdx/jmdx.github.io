@@ -1,8 +1,7 @@
 state = true
 
 class Board
-  constructor: (@context, scaleFactor) ->
-    @context.scale scaleFactor, scaleFactor
+  constructor: (@context) ->
     @xOffset = 10
     @yOffset = 10
     @score = 0
@@ -301,8 +300,10 @@ hammer.on 'doubletap', (e) ->
 # Game Setup
 gLoop = 0
 points = 0
+
+context.scale scaling, scaling
 menu = new Menu(context)
-board = new Board(context, scaling)
+board = new Board(context)
 addKeyObservers()
 waltzLoop = new buzz.sound([
   "sounds/WaltzLoop.ogg",
@@ -317,7 +318,7 @@ GameLoop = () ->
   Clear()
   switch gameState
     when "StartGame"
-      board = new Board(context, scaling)
+      board = new Board(context)
       gameState = "InGame"
     when "AtMenu" then menu.draw()
     when "InGame"
