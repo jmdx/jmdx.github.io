@@ -227,12 +227,12 @@ class Board
 			@currentInc *= -1
 	acceptKey: (code) ->
 		switch code
-			when 90 then @currentDir *= -1
-			when 37 then if (@checkSpace @currentPiece, @pieceX-2, @pieceY, @startFromUpTile) then @pieceX-=2
-			when 39 then if (@checkSpace @currentPiece, @pieceX+2, @pieceY, @startFromUpTile) then @pieceX+=2
-			when 38 then @rotate()
-			when 88 then @flip()
-			when 40
+			when KeyBindings.changeGravity then @currentDir *= -1
+			when KeyBindings.left then if (@checkSpace @currentPiece, @pieceX-2, @pieceY, @startFromUpTile) then @pieceX-=2
+			when KeyBindings.right then if (@checkSpace @currentPiece, @pieceX+2, @pieceY, @startFromUpTile) then @pieceX+=2
+			when KeyBindings.rotate then @rotate()
+			when KeyBindings.flip then @flip()
+			when KeyBindings.down
 				@count = 0
 	releaseKey: (code) ->
 	
@@ -275,6 +275,14 @@ width = 416
 height = 658
 canvas = document.getElementById 'gameCanvas'
 context = canvas.getContext '2d'
+
+hammer = new Hammer(canvas)
+hammer.on 'swipeleft', (e) -> board.acceptKey KeyBindings.left
+hammer.on 'swiperight', (e) -> board.acceptKey KeyBindings.right
+hammer.on 'swipedown', (e) -> board.acceptKey KeyBindings.down
+hammer.on 'rotate', (e) -> board.acceptKey KeyBindings.rotate
+hammer.on 'swipeup', (e) -> board.acceptKey KeyBindings.flip
+hammer.on 'doubletap', (e) -> board.acceptKey KeyBindings.changeGravity
 
 canvas.width = width
 canvas.height = height
