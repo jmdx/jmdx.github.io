@@ -476,7 +476,7 @@
   gameState = "AtMenu";
 
   mouseListener = function(e) {
-    if (e.pageY < 477 && e.pageY > 390 && gameState === "AtMenu") {
+    if (e.pageY < 477 * scaling && e.pageY > 390 * scaling && gameState === "AtMenu") {
       gameState = "StartGame";
     }
     if (gameState === "GameOver") {
