@@ -301,7 +301,7 @@ hammer.on 'doubletap', (e) ->
   board.acceptKey KeyBindings.changeGravity
 
 hammer.on 'drag', (e) ->
-  if e.gesture? and e.gesture.deltaX >= 20
+  if e.gesture? and e.gesture.deltaX >= 5
     hammer.trigger "swipe", e
 
 

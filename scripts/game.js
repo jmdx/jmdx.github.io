@@ -550,7 +550,7 @@
   });
 
   hammer.on('drag', function(e) {
-    if ((e.gesture != null) && e.gesture.deltaX >= 20) {
+    if ((e.gesture != null) && e.gesture.deltaX >= 5) {
       return hammer.trigger("swipe", e);
     }
   });
