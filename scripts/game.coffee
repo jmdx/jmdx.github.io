@@ -300,6 +300,11 @@ hammer.on 'swipeup', (e) ->
 hammer.on 'doubletap', (e) ->
   board.acceptKey KeyBindings.changeGravity
 
+hammer.on 'drag', (e) ->
+  if e.gesture? and e.gesture.deltaX >= 20
+    hammer.trigger "swipe", e
+
+
 # Game Setup
 gLoop = 0
 points = 0

@@ -549,6 +549,12 @@
     return board.acceptKey(KeyBindings.changeGravity);
   });
 
+  hammer.on('drag', function(e) {
+    if ((e.gesture != null) && e.gesture.deltaX >= 20) {
+      return hammer.trigger("swipe", e);
+    }
+  });
+
   gLoop = 0;
 
   points = 0;
