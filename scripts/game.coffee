@@ -283,6 +283,9 @@ canvas.height = height * scaling
 
 context = canvas.getContext '2d'
 
+hammerOptions = {
+  preventDefault: true
+}
 hammer = new Hammer(canvas)
 hammer.on 'swipeleft', (e) ->
   board.acceptKey KeyBindings.left
