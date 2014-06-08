@@ -91,7 +91,7 @@
       this.downButton = new ClickButton(canvas, context, scaling, TritrisImage.downInactive, TritrisImage.downActive, 302, 458, (function() {
         return self.acceptKey(KeyBindings.down);
       }), function() {});
-      this.pauseButton = new ToggleButton(canvas, context, scaling, TritrisImage.pause, TritrisImage.play, 302, 552, (function() {
+      this.pauseButton = new ToggleButton(canvas, context, scaling, TritrisImage.pause, TritrisImage.play, 340, 552, (function() {
         return self.paused = true;
       }), (function() {
         return self.paused = false;
@@ -220,7 +220,7 @@
     Board.prototype.draw = function() {
       var button, e, _i, _len, _ref, _results;
       context.fillStyle = "#777777";
-      context.font = "40pt Retro Rescued";
+      context.font = "30pt Retro Rescued";
       if (!this.isGameOver) {
         if (this.paused) {
           context.fillText("Paused", 50, 50);
@@ -238,7 +238,7 @@
           this.drawArr(this.insertCurrentPiece(this.currentArr, this.currentPiece, this.currentColor));
           this.drawNext();
           this.count = this.count > this.upInterval ? 0 : this.count + 1;
-          context.fillText("Score: " + this.score, 50, 600);
+          context.fillText("Score: " + this.score, 25, 600);
           _ref = this.buttons;
           _results = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {

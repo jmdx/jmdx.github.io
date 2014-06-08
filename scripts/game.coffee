@@ -88,7 +88,7 @@ class Board
 
     @pauseButton = new ToggleButton(canvas, context, scaling,
       TritrisImage.pause, TritrisImage.play,
-      302, 552,
+      340, 552,
       (() -> self.paused = true),
       (() -> self.paused = false)
     )
@@ -155,7 +155,7 @@ class Board
 
   draw: () ->
     context.fillStyle = "#777777"
-    context.font = "40pt Retro Rescued"
+    context.font = "30pt Retro Rescued"
     if not @isGameOver
       if @paused
         context.fillText "Paused", 50, 50
@@ -171,7 +171,7 @@ class Board
         @drawNext()
         @count = if @count > @upInterval then 0 else @count + 1
 
-        context.fillText "Score: " + @score, 50, 600
+        context.fillText "Score: " + @score, 25, 600
         button.draw() for button in @buttons
     else
       @gameOver()
