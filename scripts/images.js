@@ -29,7 +29,17 @@
     green: loadTile("Green"),
     bgTile: loadTile("Bg"),
     leftDir: loadImage("LeftDirIndicator"),
-    rightDir: loadImage("RightDirIndicator")
+    rightDir: loadImage("RightDirIndicator"),
+    rotateInactive: loadImage("RotateInactive"),
+    rotateActive: loadImage("RotateActive"),
+    flipInactive: loadImage("FlipInactive"),
+    flipActive: loadImage("FlipActive"),
+    leftInactive: loadImage("LeftInactive"),
+    leftActive: loadImage("LeftActive"),
+    downInactive: loadImage("DownInactive"),
+    downActive: loadImage("DownActive"),
+    rightInactive: loadImage("RightInactive"),
+    rightActive: loadImage("RightActive")
   };
 
 }).call(this);

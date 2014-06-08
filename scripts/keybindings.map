@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "keybindings.js",
+  "sourceRoot": "",
+  "sources": [
+    "keybindings.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;AAAA,EAAA,MAAM,CAAC,WAAP,GACE;AAAA,IAAA,aAAA,EAAe,EAAf;AAAA,IACA,IAAA,EAAM,EADN;AAAA,IAEA,KAAA,EAAO,EAFP;AAAA,IAGA,IAAA,EAAM,EAHN;AAAA,IAIA,MAAA,EAAQ,EAJR;AAAA,IAKA,IAAA,EAAM,EALN;GADF,CAAA;AAAA"
+}

@@ -38,6 +38,53 @@ class Board
     @startFromUpTile = true
     @flipCount = 2
     @isGameOver = false
+    @initButtons()
+
+  initButtons: () ->
+    self = @
+
+    changeGravity = () ->
+      self.currentDir *= -1
+    @gravityButton = new ToggleButton( canvas, context, scaling,
+      TritrisImage.rightDir, TritrisImage.leftDir,
+      270, 150,
+      changeGravity, changeGravity
+    )
+
+    @rotateButton = new ClickButton(canvas, context, scaling,
+      TritrisImage.rotateInactive, TritrisImage.rotateActive,
+      265, 310,
+      (() -> self.acceptKey(KeyBindings.rotate)), ->
+    )
+
+    @flipButton = new ClickButton(canvas, context, scaling,
+      TritrisImage.flipInactive, TritrisImage.flipActive,
+      340, 310,
+      (() -> self.flip()),
+      ->
+    )
+
+    @leftButton = new ClickButton(canvas, context, scaling,
+      TritrisImage.leftInactive, TritrisImage.leftActive,
+      265, 384,
+      (() -> self.acceptKey(KeyBindings.left)),
+      ->
+    )
+
+    @rightButton = new ClickButton(canvas, context, scaling,
+      TritrisImage.rightInactive, TritrisImage.rightActive,
+      340, 384,
+      (() -> self.acceptKey(KeyBindings.right)),
+      ->
+    )
+
+    @downButton = new ClickButton(canvas, context, scaling,
+      TritrisImage.downInactive, TritrisImage.downActive,
+      302, 458,
+      (() -> self.acceptKey(KeyBindings.down)),
+      ->
+    )
+    @buttons = [@gravityButton, @rotateButton, @flipButton, @leftButton, @downButton, @rightButton]
 
   update: () ->
     if @checkSpace @currentPiece, @pieceX + @currentDir, @pieceY + 1, @startFromUpTile
@@ -107,19 +154,14 @@ class Board
       @drawArr @currentArr
       @drawArr @insertCurrentPiece @currentArr, @currentPiece, @currentColor
       @drawNext()
-      @drawDir()
       @count = if @count > @upInterval then 0 else @count + 1
       context.fillStyle = "#777777"
       context.font = "40pt Retro Rescued"
       context.fillText "Score: " + @score, 50, 600
+
+      button.draw() for button in @buttons
     else
       @gameOver()
-  drawDir: () ->
-    try
-      switch @currentDir
-        when -1 then @context.drawImage TritrisImage.leftDir, 270, 250
-        when 1 then @context.drawImage TritrisImage.rightDir, 270, 250
-    catch e
 
   drawNext: () ->
     isUpTile = true
@@ -228,7 +270,7 @@ class Board
       @currentInc *= -1
   acceptKey: (code) ->
     switch code
-      when KeyBindings.changeGravity then @currentDir *= -1
+      when KeyBindings.changeGravity then @gravityButton.clicked()
       when KeyBindings.left then if (@checkSpace @currentPiece, @pieceX - 2, @pieceY, @startFromUpTile) then @pieceX -= 2
       when KeyBindings.right then if (@checkSpace @currentPiece, @pieceX + 2, @pieceY, @startFromUpTile) then @pieceX += 2
       when KeyBindings.rotate then @rotate()
@@ -293,13 +335,6 @@ hammer.on 'dragright', (e) ->
   board.acceptKey KeyBindings.right
 hammer.on 'dragdown', (e) ->
   board.acceptKey KeyBindings.down
-hammer.on 'rotate', (e) ->
-  board.acceptKey KeyBindings.rotate
-hammer.on 'dragup', (e) ->
-  board.acceptKey KeyBindings.flip
-hammer.on 'doubletap', (e) ->
-  board.acceptKey KeyBindings.changeGravity
-
 
 
 # Game Setup
@@ -308,7 +343,7 @@ points = 0
 
 context.scale scaling, scaling
 menu = new Menu(context)
-board = new Board(context)
+board = new Board(context, scaling)
 addKeyObservers()
 waltzLoop = new buzz.sound([
   "sounds/WaltzLoop.ogg",
@@ -323,7 +358,7 @@ GameLoop = () ->
   Clear()
   switch gameState
     when "StartGame"
-      board = new Board(context)
+      board = new Board(context, scaling)
       gameState = "InGame"
     when "AtMenu" then menu.draw()
     when "InGame"

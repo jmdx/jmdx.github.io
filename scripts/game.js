@@ -65,7 +65,33 @@
       this.startFromUpTile = true;
       this.flipCount = 2;
       this.isGameOver = false;
+      this.initButtons();
     }
+
+    Board.prototype.initButtons = function() {
+      var changeGravity, self;
+      self = this;
+      changeGravity = function() {
+        return self.currentDir *= -1;
+      };
+      this.gravityButton = new ToggleButton(canvas, context, scaling, TritrisImage.rightDir, TritrisImage.leftDir, 270, 150, changeGravity, changeGravity);
+      this.rotateButton = new ClickButton(canvas, context, scaling, TritrisImage.rotateInactive, TritrisImage.rotateActive, 265, 310, (function() {
+        return self.acceptKey(KeyBindings.rotate);
+      }), function() {});
+      this.flipButton = new ClickButton(canvas, context, scaling, TritrisImage.flipInactive, TritrisImage.flipActive, 340, 310, (function() {
+        return self.flip();
+      }), function() {});
+      this.leftButton = new ClickButton(canvas, context, scaling, TritrisImage.leftInactive, TritrisImage.leftActive, 265, 384, (function() {
+        return self.acceptKey(KeyBindings.left);
+      }), function() {});
+      this.rightButton = new ClickButton(canvas, context, scaling, TritrisImage.rightInactive, TritrisImage.rightActive, 340, 384, (function() {
+        return self.acceptKey(KeyBindings.right);
+      }), function() {});
+      this.downButton = new ClickButton(canvas, context, scaling, TritrisImage.downInactive, TritrisImage.downActive, 302, 458, (function() {
+        return self.acceptKey(KeyBindings.down);
+      }), function() {});
+      return this.buttons = [this.gravityButton, this.rotateButton, this.flipButton, this.leftButton, this.downButton, this.rightButton];
+    };
 
     Board.prototype.update = function() {
       var newIndex;
@@ -186,7 +212,7 @@
     };
 
     Board.prototype.draw = function() {
-      var e;
+      var button, e, _i, _len, _ref, _results;
       if (!this.isGameOver) {
         if (this.count === 0) {
           this.update();
@@ -199,27 +225,19 @@
         this.drawArr(this.currentArr);
         this.drawArr(this.insertCurrentPiece(this.currentArr, this.currentPiece, this.currentColor));
         this.drawNext();
-        this.drawDir();
         this.count = this.count > this.upInterval ? 0 : this.count + 1;
         context.fillStyle = "#777777";
         context.font = "40pt Retro Rescued";
-        return context.fillText("Score: " + this.score, 50, 600);
+        context.fillText("Score: " + this.score, 50, 600);
+        _ref = this.buttons;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          button = _ref[_i];
+          _results.push(button.draw());
+        }
+        return _results;
       } else {
         return this.gameOver();
-      }
-    };
-
-    Board.prototype.drawDir = function() {
-      var e;
-      try {
-        switch (this.currentDir) {
-          case -1:
-            return this.context.drawImage(TritrisImage.leftDir, 270, 250);
-          case 1:
-            return this.context.drawImage(TritrisImage.rightDir, 270, 250);
-        }
-      } catch (_error) {
-        e = _error;
       }
     };
 
@@ -423,7 +441,7 @@
     Board.prototype.acceptKey = function(code) {
       switch (code) {
         case KeyBindings.changeGravity:
-          return this.currentDir *= -1;
+          return this.gravityButton.clicked();
         case KeyBindings.left:
           if (this.checkSpace(this.currentPiece, this.pieceX - 2, this.pieceY, this.startFromUpTile)) {
             return this.pieceX -= 2;
@@ -537,18 +555,6 @@
     return board.acceptKey(KeyBindings.down);
   });
 
-  hammer.on('rotate', function(e) {
-    return board.acceptKey(KeyBindings.rotate);
-  });
-
-  hammer.on('dragup', function(e) {
-    return board.acceptKey(KeyBindings.flip);
-  });
-
-  hammer.on('doubletap', function(e) {
-    return board.acceptKey(KeyBindings.changeGravity);
-  });
-
   gLoop = 0;
 
   points = 0;
@@ -557,7 +563,7 @@
 
   menu = new Menu(context);
 
-  board = new Board(context);
+  board = new Board(context, scaling);
 
   addKeyObservers();
 
@@ -571,7 +577,7 @@
     Clear();
     switch (gameState) {
       case "StartGame":
-        board = new Board(context);
+        board = new Board(context, scaling);
         gameState = "InGame";
         break;
       case "AtMenu":
