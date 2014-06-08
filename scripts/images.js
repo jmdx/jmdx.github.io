@@ -39,7 +39,9 @@
     downInactive: loadImage("DownInactive"),
     downActive: loadImage("DownActive"),
     rightInactive: loadImage("RightInactive"),
-    rightActive: loadImage("RightActive")
+    rightActive: loadImage("RightActive"),
+    pause: loadImage("Pause"),
+    play: loadImage("Play")
   };
 
 }).call(this);

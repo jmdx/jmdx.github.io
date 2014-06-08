@@ -39,6 +39,7 @@ class Board
     @flipCount = 2
     @isGameOver = false
     @initButtons()
+    @paused = false
 
   initButtons: () ->
     self = @
@@ -84,7 +85,15 @@ class Board
       (() -> self.acceptKey(KeyBindings.down)),
       ->
     )
-    @buttons = [@gravityButton, @rotateButton, @flipButton, @leftButton, @downButton, @rightButton]
+
+    @pauseButton = new ToggleButton(canvas, context, scaling,
+      TritrisImage.pause, TritrisImage.play,
+      302, 552,
+      (() -> self.paused = true),
+      (() -> self.paused = false)
+    )
+
+    @buttons = [@gravityButton, @rotateButton, @flipButton, @leftButton, @downButton, @rightButton, @pauseButton]
 
   update: () ->
     if @checkSpace @currentPiece, @pieceX + @currentDir, @pieceY + 1, @startFromUpTile
@@ -145,21 +154,25 @@ class Board
     newArr
 
   draw: () ->
+    context.fillStyle = "#777777"
+    context.font = "40pt Retro Rescued"
     if not @isGameOver
-      if @count == 0
-        @update()
-      try
-        @context.drawImage TritrisImage.bg, 0, 0
-      catch e
-      @drawArr @currentArr
-      @drawArr @insertCurrentPiece @currentArr, @currentPiece, @currentColor
-      @drawNext()
-      @count = if @count > @upInterval then 0 else @count + 1
-      context.fillStyle = "#777777"
-      context.font = "40pt Retro Rescued"
-      context.fillText "Score: " + @score, 50, 600
+      if @paused
+        context.fillText "Paused", 50, 50
+        @pauseButton.draw()
+      else
+        if @count == 0
+          @update()
+        try
+          @context.drawImage TritrisImage.bg, 0, 0
+        catch e
+        @drawArr @currentArr
+        @drawArr @insertCurrentPiece @currentArr, @currentPiece, @currentColor
+        @drawNext()
+        @count = if @count > @upInterval then 0 else @count + 1
 
-      button.draw() for button in @buttons
+        context.fillText "Score: " + @score, 50, 600
+        button.draw() for button in @buttons
     else
       @gameOver()
 
@@ -330,7 +343,7 @@ hammerOptions = {
 }
 hammer = new Hammer(canvas)
 hammer.on 'dragleft', (e) ->
-  board.acceptKey KeyBindings.left
+    board.acceptKey KeyBindings.left
 hammer.on 'dragright', (e) ->
   board.acceptKey KeyBindings.right
 hammer.on 'dragdown', (e) ->

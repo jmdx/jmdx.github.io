@@ -66,6 +66,7 @@
       this.flipCount = 2;
       this.isGameOver = false;
       this.initButtons();
+      this.paused = false;
     }
 
     Board.prototype.initButtons = function() {
@@ -90,7 +91,12 @@
       this.downButton = new ClickButton(canvas, context, scaling, TritrisImage.downInactive, TritrisImage.downActive, 302, 458, (function() {
         return self.acceptKey(KeyBindings.down);
       }), function() {});
-      return this.buttons = [this.gravityButton, this.rotateButton, this.flipButton, this.leftButton, this.downButton, this.rightButton];
+      this.pauseButton = new ToggleButton(canvas, context, scaling, TritrisImage.pause, TritrisImage.play, 302, 552, (function() {
+        return self.paused = true;
+      }), (function() {
+        return self.paused = false;
+      }));
+      return this.buttons = [this.gravityButton, this.rotateButton, this.flipButton, this.leftButton, this.downButton, this.rightButton, this.pauseButton];
     };
 
     Board.prototype.update = function() {
@@ -213,29 +219,34 @@
 
     Board.prototype.draw = function() {
       var button, e, _i, _len, _ref, _results;
+      context.fillStyle = "#777777";
+      context.font = "40pt Retro Rescued";
       if (!this.isGameOver) {
-        if (this.count === 0) {
-          this.update();
+        if (this.paused) {
+          context.fillText("Paused", 50, 50);
+          return this.pauseButton.draw();
+        } else {
+          if (this.count === 0) {
+            this.update();
+          }
+          try {
+            this.context.drawImage(TritrisImage.bg, 0, 0);
+          } catch (_error) {
+            e = _error;
+          }
+          this.drawArr(this.currentArr);
+          this.drawArr(this.insertCurrentPiece(this.currentArr, this.currentPiece, this.currentColor));
+          this.drawNext();
+          this.count = this.count > this.upInterval ? 0 : this.count + 1;
+          context.fillText("Score: " + this.score, 50, 600);
+          _ref = this.buttons;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            button = _ref[_i];
+            _results.push(button.draw());
+          }
+          return _results;
         }
-        try {
-          this.context.drawImage(TritrisImage.bg, 0, 0);
-        } catch (_error) {
-          e = _error;
-        }
-        this.drawArr(this.currentArr);
-        this.drawArr(this.insertCurrentPiece(this.currentArr, this.currentPiece, this.currentColor));
-        this.drawNext();
-        this.count = this.count > this.upInterval ? 0 : this.count + 1;
-        context.fillStyle = "#777777";
-        context.font = "40pt Retro Rescued";
-        context.fillText("Score: " + this.score, 50, 600);
-        _ref = this.buttons;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          button = _ref[_i];
-          _results.push(button.draw());
-        }
-        return _results;
       } else {
         return this.gameOver();
       }

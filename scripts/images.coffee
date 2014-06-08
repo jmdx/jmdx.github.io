@@ -34,3 +34,5 @@ window.TritrisImage =
   downActive: loadImage("DownActive")
   rightInactive: loadImage("RightInactive")
   rightActive: loadImage("RightActive")
+  pause: loadImage("Pause")
+  play: loadImage("Play")
