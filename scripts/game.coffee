@@ -342,12 +342,9 @@ hammerOptions = {
   preventDefault: true
 }
 hammer = new Hammer(canvas)
-hammer.on 'dragleft', (e) ->
-    board.acceptKey KeyBindings.left
-hammer.on 'dragright', (e) ->
-  board.acceptKey KeyBindings.right
-hammer.on 'dragdown', (e) ->
-  board.acceptKey KeyBindings.down
+hammer.on 'dragleft', _.debounce((() -> board.acceptKey KeyBindings.left), 100)
+hammer.on 'dragright', _.debounce((() -> board.acceptKey KeyBindings.right), 100)
+hammer.on 'dragdown', _.debounce((() -> board.acceptKey KeyBindings.down), 100)
 
 
 # Game Setup
