@@ -1,3 +1,8 @@
+mouseManuallyDisabled = false
+isTouch = () ->
+  mouseManuallyDisabled or 'ontouchstart' in window or navigator.maxTouchPoints;
+
+
 relMouseCoordsWithin = (event, canvas, x, y, width, height) ->
   totalOffsetX = 0
   totalOffsetY = 0
@@ -39,8 +44,9 @@ class window.CanvasButton
         self.globalMouseup()
     @mouseDownEvent = _.throttle(@mouseDownEvent, 100, {trailing: false})
     @mouseUpEvent = _.throttle(@mouseUpEvent, 100, {trailing: false})
-    @canvas.addEventListener 'mousedown', @mouseDownEvent
-    @canvas.addEventListener 'mouseup', @mouseUpEvent
+    if not isTouch()
+      @canvas.addEventListener 'mousedown', @mouseDownEvent
+      @canvas.addEventListener 'mouseup', @mouseUpEvent
     @canvas.addEventListener 'touchstart', @mouseDownEvent
     @canvas.addEventListener 'touchend', @mouseUpEvent
   clicked: () ->
