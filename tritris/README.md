@@ -1,4 +1,4 @@
-jmdx.github.io
+Tritris
 ==============
 
 A triangle-y twist on a classic game
