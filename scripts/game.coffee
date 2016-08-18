@@ -333,7 +333,7 @@ heightScaling = window.innerHeight / height
 scaling = Math.min(widthScaling, heightScaling)
 
 canvas = document.getElementById 'gameCanvas'
-canvas.width = width * scaling
+canvas.width = width * scaling - 1
 canvas.height = height * scaling
 
 context = canvas.getContext '2d'
@@ -355,14 +355,14 @@ context.scale scaling, scaling
 menu = new Menu(context)
 board = new Board(context, scaling)
 addKeyObservers()
-waltzLoop = new buzz.sound([
+window.waltzLoop = new buzz.sound([
   "sounds/WaltzLoop.ogg",
   "sounds/WaltzLoop.mp3",
   "sounds/WaltzLoop.aac",
   "sounds/WaltzLoop.wav"
 ]);
-waltzLoop.play()
-waltzLoop.loop()
+window.waltzLoop.play()
+window.waltzLoop.loop()
 
 GameLoop = () ->
   Clear()
@@ -373,7 +373,7 @@ GameLoop = () ->
     when "AtMenu" then menu.draw()
     when "InGame"
       board.draw()
-      waltzLoop.setSpeed(0.9 + 0.1 * board.level)
+      window.waltzLoop.setSpeed(0.9 + 0.1 * board.level)
       if board.isGameOver then gameState = "GameOver"
     when "GameOver" then board.gameOver()
   if state is true

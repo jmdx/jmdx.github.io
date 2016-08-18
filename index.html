@@ -27,8 +27,20 @@
             margin-right: auto;
         }
     </style>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script>
+
+      // Only triggers within phonegap, necessary because the phonegap keepRunning=false preference is broken.
+      window.onDeviceReady = function() {
+        document.addEventListener("pause", (function(){ window.waltzLoop.mute(); }), false);
+        document.addEventListener("resume", (function() { window.waltzLoop.unmute(); }), false);
+      };
+      window.onLoad = function() {
+        document.addEventListener("deviceready", onDeviceReady, false)
+      };
+    </script>
 </head>
-<body>
+<body onload="onLoad()">
     <canvas id='gameCanvas'></canvas>
     <script src="./scripts/underscore-min.js"></script>
     <script src="./scripts/hammer-1.1.3.min.js"></script>

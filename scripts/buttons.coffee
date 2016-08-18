@@ -1,4 +1,4 @@
-mouseManuallyDisabled = false
+mouseManuallyDisabled = true
 isTouch = () ->
   mouseManuallyDisabled or 'ontouchstart' in window or navigator.maxTouchPoints;
 
