@@ -1,0 +1,3 @@
+[submodule "pogo-angler"]
+	path = pogo-angler
+	url = https://github.com/jmdx/pogo-angler
