@@ -9851,6 +9851,21 @@ var _user$project$Main$getDirection = function (code) {
 	}
 };
 var _user$project$Main$GameOver = {ctor: 'GameOver'};
+var _user$project$Main$advanceTick = function (game) {
+	return A2(_user$project$Main$collides, game.enemy, game.player) ? _elm_lang$core$Native_Utils.update(
+		game,
+		{state: _user$project$Main$GameOver}) : (A2(_user$project$Main$collides, game.player, game.goal) ? _elm_lang$core$Native_Utils.update(
+		game,
+		{
+			score: game.score + 1,
+			goal: A2(_user$project$Main$move, game.goal, game)
+		}) : _elm_lang$core$Native_Utils.update(
+		game,
+		{
+			enemy: A2(_user$project$Main$move, game.enemy, game),
+			player: A2(_user$project$Main$move, game.player, game)
+		}));
+};
 var _user$project$Main$InProgress = {ctor: 'InProgress'};
 var _user$project$Main$Start = {ctor: 'Start'};
 var _user$project$Main$init = {
@@ -9874,71 +9889,27 @@ var _user$project$Main$init = {
 var _user$project$Main$update = F2(
 	function (msg, _p29) {
 		var _p30 = _p29;
-		var _p38 = _p30._0;
-		var _p37 = _p30._1;
-		var _p31 = _p37.state;
+		var _p37 = _p30._0;
+		var _p36 = _p30._1;
+		var _p31 = _p36.state;
 		switch (_p31.ctor) {
 			case 'InProgress':
 				var _p32 = msg;
 				if (_p32.ctor === 'Tick') {
-					var _p33 = _p32._0;
-					if (A2(_user$project$Main$collides, _p37.enemy, _p37.player)) {
-						return {
-							ctor: '_Tuple2',
-							_0: {
-								ctor: '_Tuple2',
-								_0: _p33,
-								_1: _elm_lang$core$Native_Utils.update(
-									_p37,
-									{state: _user$project$Main$GameOver})
-							},
-							_1: _elm_lang$core$Platform_Cmd$none
-						};
-					} else {
-						if (A2(_user$project$Main$collides, _p37.player, _p37.goal)) {
-							return {
-								ctor: '_Tuple2',
-								_0: {
-									ctor: '_Tuple2',
-									_0: _p33,
-									_1: _elm_lang$core$Native_Utils.update(
-										_p37,
-										{
-											score: _p37.score + 1,
-											goal: A2(_user$project$Main$move, _p37.goal, _p37)
-										})
-								},
-								_1: _elm_lang$core$Platform_Cmd$none
-							};
-						} else {
-							var afterPlayerMoved = _elm_lang$core$Native_Utils.update(
-								_p37,
-								{
-									player: A2(_user$project$Main$move, _p37.player, _p37)
-								});
-							return {
-								ctor: '_Tuple2',
-								_0: {
-									ctor: '_Tuple2',
-									_0: _p33,
-									_1: _elm_lang$core$Native_Utils.update(
-										afterPlayerMoved,
-										{
-											enemy: A2(_user$project$Main$move, _p37.enemy, _p37)
-										})
-								},
-								_1: _elm_lang$core$Platform_Cmd$none
-							};
-						}
-					}
+					var newGameState = _user$project$Main$advanceTick(_p36);
+					return {
+						ctor: '_Tuple2',
+						_0: {ctor: '_Tuple2', _0: _p32._0, _1: newGameState},
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
 				} else {
 					return {
 						ctor: '_Tuple2',
 						_0: {
 							ctor: '_Tuple2',
-							_0: _p38,
+							_0: _p37,
 							_1: _elm_lang$core$Native_Utils.update(
-								_p37,
+								_p36,
 								{
 									playerDirection: _user$project$Main$getDirection(_p32._0)
 								})
@@ -9947,15 +9918,15 @@ var _user$project$Main$update = F2(
 					};
 				}
 			case 'Start':
-				var _p34 = msg;
-				if ((_p34.ctor === 'KeyMsg') && (_p34._0 === 32)) {
+				var _p33 = msg;
+				if ((_p33.ctor === 'KeyMsg') && (_p33._0 === 32)) {
 					return {
 						ctor: '_Tuple2',
 						_0: {
 							ctor: '_Tuple2',
-							_0: _p38,
+							_0: _p37,
 							_1: _elm_lang$core$Native_Utils.update(
-								_p37,
+								_p36,
 								{state: _user$project$Main$InProgress})
 						},
 						_1: _elm_lang$core$Platform_Cmd$none
@@ -9963,16 +9934,16 @@ var _user$project$Main$update = F2(
 				} else {
 					return {
 						ctor: '_Tuple2',
-						_0: {ctor: '_Tuple2', _0: _p38, _1: _p37},
+						_0: {ctor: '_Tuple2', _0: _p37, _1: _p36},
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				}
 			default:
-				var _p35 = msg;
-				if ((_p35.ctor === 'KeyMsg') && (_p35._0 === 32)) {
-					var _p36 = _user$project$Main$init;
-					var initTime = _p36._0._0;
-					var initModel = _p36._0._1;
+				var _p34 = msg;
+				if ((_p34.ctor === 'KeyMsg') && (_p34._0 === 32)) {
+					var _p35 = _user$project$Main$init;
+					var initTime = _p35._0._0;
+					var initModel = _p35._0._1;
 					return {
 						ctor: '_Tuple2',
 						_0: {
@@ -9987,7 +9958,7 @@ var _user$project$Main$update = F2(
 				} else {
 					return {
 						ctor: '_Tuple2',
-						_0: {ctor: '_Tuple2', _0: _p38, _1: _p37},
+						_0: {ctor: '_Tuple2', _0: _p37, _1: _p36},
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				}
@@ -9999,14 +9970,14 @@ var _user$project$Main$KeyMsg = function (a) {
 var _user$project$Main$Tick = function (a) {
 	return {ctor: 'Tick', _0: a};
 };
-var _user$project$Main$subscriptions = function (_p39) {
-	var _p40 = _p39;
+var _user$project$Main$subscriptions = function (_p38) {
+	var _p39 = _p38;
 	return _elm_lang$core$Platform_Sub$batch(
 		{
 			ctor: '::',
 			_0: A2(
 				_elm_lang$core$Time$every,
-				(_elm_lang$core$Time$second / 4) + (_elm_lang$core$Time$second / (_elm_lang$core$Basics$toFloat(_p40._1.score) + 1)),
+				(_elm_lang$core$Time$second / 4) + (_elm_lang$core$Time$second / (_elm_lang$core$Basics$toFloat(_p39._1.score) + 1)),
 				_user$project$Main$Tick),
 			_1: {
 				ctor: '::',
